@@ -46,36 +46,44 @@ Nginx와 tomcat 컨테이너 2개를 만들어서 이 2개의 컨테이너가 �
 1. docker-compose.yml 파일을 만들어 다음과 같은 내용을 추가한다.
     ```yml
     version: '3'
-    services:
-    myproxy:
-        image: nginx:1.18.0
-        ports:
-        - "50443:443"
-        volumes:
-        - ./proxy/nginx.conf:/etc/nginx/nginx.conf
-        - ./proxy/ssl:/opt/ssl
-        - ./proxy/logs:/var/log/nginx
-        - /etc/localtime:/etc/localtime:ro
-        restart: always
-        networks:
-        mynet:
-            ipv4_address: 172.31.0.2
+      services:
+        myproxy:
+          image: nginx:1.18.0
+          ports:
+            - "50443:443"
+          volumes:
+            - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+            - ./proxy/ssl:/opt/ssl
+            - ./proxy/logs:/var/log/nginx
+            - /etc/localtime:/etc/localtime:ro
+          restart: always
+          networks:
+            mynet:
+              ipv4_address: 172.31.0.2
 
     networks:
-    mynet:
+      mynet:
         external:
-        name: testnet
+          name: testnet
     ```
 
-2. nginx에 접속해 보자. tomcat에 직접 접속했던 것과 같은 화면이니 성공이다.(404 오류지만...)   
+2. nginx container 실행하기
+    - 다음 커맨드를 이용해 nginx container를 만들고 실행해 보자.
+        ```bash
+        docker-compose up
+        ```
+
+3. container를 만들고 실행했으면 nginx에 접속해 보자. tomcat에 직접 접속했던 것과 같은 화면이니 성공이다.(404 오류지만...)   
     ![nginx-proxy](./img/nginx-proxy.png)
 
-3. `yml` 설명
+4. `yml` 설명
     - `services.myproxy.image: nginx:1.18.0`
-        - 어떤 docker image를 사용할건지
+        - 어떤 docker image를 사용할건지를 지정하며 이미지가 없으면 자동으로 다운로드 받는다.
     - `services.myproxy.ports`
         - 호스트 포트와 컨테이너 포트를 매핑한다. `50443:443`은 호스트의 50443 포트로 접속하면 컨테이너의 443으로 포워딩한다는 의미이다.
     - `services.myproxy.volumes`
         - 호스트의 지정 파일 혹은 폴더를 컨테이너의 폴더와 매핑한다. 이를 통해 컨테이너가 삭제되어도 해당 파일을 영구적으로 유지할 수 있다.
     - `services.myproxy.networks.mynet.ipv4_address` 
         - container에 지정할 IP
+    - `networks.mynet.external.name`
+        - 컨테이너가 사용할 네트워크 이름이다. `Prerequisites`에서 만들었던 `subnet` 이름을 입력한다. 컨테이너에서 호스트로 접속할 때는 `172.31.0.1`을 사용하면 된다.
