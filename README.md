@@ -46,20 +46,20 @@ Nginx와 tomcat 컨테이너 2개를 만들어서 이 2개의 컨테이너가 �
 1. docker-compose.yml 파일을 만들어 다음과 같은 내용을 추가한다.
     ```yml
     version: '3'
-      services:
-        myproxy:
-          image: nginx:1.18.0
-          ports:
-            - "50443:443"
-          volumes:
-            - ./proxy/nginx.conf:/etc/nginx/nginx.conf
-            - ./proxy/ssl:/opt/ssl
-            - ./proxy/logs:/var/log/nginx
-            - /etc/localtime:/etc/localtime:ro
-          restart: always
-          networks:
-            mynet:
-              ipv4_address: 172.31.0.2
+    services:
+      myproxy:
+        image: nginx:1.18.0
+        ports:
+          - "50443:443"
+        volumes:
+          - ./proxy/nginx.conf:/etc/nginx/nginx.conf
+          - ./proxy/ssl:/opt/ssl
+          - ./proxy/logs:/var/log/nginx
+          - /etc/localtime:/etc/localtime:ro
+        restart: always
+        networks:
+          mynet:
+            ipv4_address: 172.31.0.2
 
     networks:
       mynet:
