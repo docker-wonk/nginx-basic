@@ -33,14 +33,15 @@ Nginx와 tomcat 컨테이너 2개를 만들어서 이 2개의 컨테이너가 �
             tomcat:9.0
         ```
 
+    - 브라우저에서 접속해 보자. 404 오류가 나는데 돌어가고 있는 앱이 없기 때문에 그런 것 같다. 일단 tomcat은 작동중인 것을 확인했으니 넘어가자.
+        ![tomcat](./img/tomcat.png)
+
 3. 사설 인증서 생성하기
-    - proxy/ssl 경로 안에서 openssl을 이용해서 사설 인증서를 만들자.
+    - proxy/ssl 경로 안에서 openssl을 이용해서 사설 인증서를 만들자. nginx만 ssl로 설정할 것이고 tomcat은 기본 설정인 http 프로토콜을 쓸 것이다.
         ```bash
         openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ./proxy/ssl/server.key -out ./proxy/ssl/server.crt
         ```
 
-    - 브라우저에서 접속해 보자. 404 오류가 나는데 돌어가고 있는 앱이 없기 때문에 그런 것 같다. 일단 tomcat은 작동중인 것을 확인했으니 넘어가자.
-        ![tomcat](./img/tomcat.png)
 
 ## Nginx docker-compose.yml 파일 만들기
 1. docker-compose.yml 파일을 만들어 다음과 같은 내용을 추가한다.
